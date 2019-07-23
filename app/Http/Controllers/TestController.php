@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Tracker;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -25,16 +26,34 @@ class TestController extends Controller
      */
     public function export()
     {
-        return Excel::download(new ExportUsers, 'users.xlsx');
+        return Excel::download(new ExportUsers, 'Competition tracker.xlsx');
     }
 
     /**
      * @return \Illuminate\Support\Collection
      */
-    public function import()
+    public function import(Request $request)
     {
-        Excel::import(new ImportUsers, request()->file('file'));
+        /*$path = $request->file->getRealPath();
+        $data = \Maatwebsite\Excel\Excel::load($path)->get();
 
+        return $data;*/
+
+        $rows = Excel::toCollection(new ImportUsers(),request()->file('file'));
+
+
+
+        $i = 0;
+        foreach($rows[0] as $row){
+            echo $row[0]."=>".$row[1]." <br>";
+            $i++;
+        }
+        exit;
+        //return $rows;
+
+        Tracker::truncate();
+
+        Excel::import(new ImportUsers, request()->file('file'));
         return back();
     }
 }

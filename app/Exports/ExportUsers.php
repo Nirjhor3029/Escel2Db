@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use App\Tracker;
 use App\User;
 use Maatwebsite\Excel\Concerns\FromCollection;
 
@@ -12,6 +13,6 @@ class ExportUsers implements FromCollection
     */
     public function collection()
     {
-        return User::all();
+        return Tracker::all();
     }
 }
